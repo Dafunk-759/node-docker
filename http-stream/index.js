@@ -1,9 +1,10 @@
 import http from "http"
-import fs from "fs/promises"
+import { readFile } from "fs/promises"
+import { createReadStream } from "fs"
 
 const routes = {
   "/": (req, res) =>
-    fs.readFile("./index.html").then(
+    readFile("./index.html").then(
       content => {
         res.statusCode = 200
         res.setHeader("Contet-Type", "text/html")
@@ -30,10 +31,16 @@ const routes = {
     res.setHeader("Contet-Type", "application/json")
     res.end(JSON.stringify(data))
   },
-  "/img": (req, res) => {
-    console.log("headers", req.headers.accept)
-
-    res.end("img")
+  "/view.jpg": (req, res) => {
+    createReadStream("./view.jpg")
+      .on("data", chunk => {
+        console.log("Reading...")
+      })
+      .on("error", err => {
+        res.statusCode = 500
+        res.end("500 server error")
+      })
+      .pipe(res)
   }
 }
 
