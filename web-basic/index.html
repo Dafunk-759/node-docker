@@ -1,0 +1,35 @@
+<html>
+  <head>
+    <title>Http Demo</title>
+  </head>
+  <body>
+    <div>Hello World</div>
+    <div id="app"></div>
+
+    <script>
+      const app = {
+        el: document.getElementById("app"),
+        set temp(html) {
+          this.el.innerHTML = html.trim()
+        }
+      }
+
+      console.log("index.html")
+
+      // 请求运行在另一个端口号上的api服务
+      fetch("http://localhost:3001/api/users", {
+        headers: {
+          "X-Token": "jq"
+        }
+      })
+        .then(res => res.json())
+        .then(users => {
+          app.temp = `
+            <pre>
+              ${JSON.stringify(users, null, 2)}
+            </pre>
+          `
+        })
+    </script>
+  </body>
+</html>
