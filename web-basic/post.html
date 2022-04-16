@@ -1,0 +1,27 @@
+<html>
+  <head>
+    <title>Http Post Demo</title>
+  </head>
+  <body>
+    <div>Hello World</div>
+    <div id="app"></div>
+
+    <script>
+      const picec =
+        "name=foo&age=18&sex=man&birthday=20011025"
+      const len = picec.length
+
+      console.log("len :" + len)
+
+      console.log("post.html")
+      fetch("/api/save", {
+        method: "POST",
+        body: picec.repeat(10000)
+      })
+        .then(res => res.text())
+        .then(msg => {
+          console.log(msg)
+        })
+    </script>
+  </body>
+</html>

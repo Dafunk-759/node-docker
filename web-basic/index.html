@@ -17,10 +17,11 @@
       console.log("index.html")
 
       // 请求运行在另一个端口号上的api服务
-      fetch("http://localhost:3001/api/users", {
+      fetch("/api/users", {
         headers: {
           "X-Token": "jq"
-        }
+        },
+        credentials: "include" // 发送请求时携带cookie
       })
         .then(res => res.json())
         .then(users => {
