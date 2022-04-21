@@ -197,7 +197,7 @@ async function select() {
     .then(console.log)
 }
 
-subSelect()
+// subSelect()
 async function subSelect() {
   await db
     .query(
@@ -205,6 +205,22 @@ async function subSelect() {
       SELECT *
       FROM (VALUES ('anne', 'smith'), ('bob', 'jones'), ('joe', 'blow'))
            AS names(first, last);
+    `
+    )
+    .then(console.log)
+}
+
+// withSelect()
+async function withSelect() {
+  await db
+    .query(
+      `--sql
+      WITH RECURSIVE t(n) AS (
+        VALUES (1)
+        UNION ALL
+        SELECT (n + 1) FROM t WHERE n < 100
+      )
+      SELECT * FROM t;
     `
     )
     .then(console.log)
