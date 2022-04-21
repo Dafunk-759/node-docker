@@ -438,18 +438,113 @@ async function alterTable() {
     .then(console.log)
 }
 
-schema()
+// schema()
 async function schema() {
-  await db.query(`--sql
+  await db
+    .query(
+      `--sql
     DROP SCHEMA IF EXISTS my_first_schema CASCADE;
     CREATE SCHEMA my_first_schema;
-  `).then(console.log)
+  `
+    )
+    .then(console.log)
 
-  await db.query(`--sql
+  await db
+    .query(
+      `--sql
     CREATE TABLE my_first_schema.my_table (
       id integer PRIMARY KEY,
       name text
     )
-  `).then(console.log)
+  `
+    )
+    .then(console.log)
+}
+
+// inherit()
+async function inherit() {
+  await db
+    .query(
+      `--sql
+      DROP TABLE IF EXISTS cities CASCADE;
+      CREATE TABLE cities (
+        name            text NOT NULL,
+        population      float NOT NULL,
+        elevation       int  NOT NULL -- in feet
+      );
+    `
+    )
+    .then(console.log)
+
+  await inserMany(
+    `--sql
+    INSERT INTO cities (name, population, elevation) 
+  `,
+    [
+      ["shijiazhaung", 500.5, 20],
+      ["baoding", 300.9, 15]
+    ]
+  ).then(console.log)
+
+  await db
+    .query(
+      `--sql   
+      SELECT * FROM cities;
+    `
+    )
+    .then(res => res.rows)
+    .then(console.log)
+
+  await db
+    .query(
+      `--sql
+      DROP TABLE IF EXISTS capitals;
+      CREATE TABLE capitals (
+        state char(2)
+      ) INHERITS (cities);
+    `
+    )
+    .then(console.log)
+
+  await inserMany(
+    `--sql
+    INSERT INTO capitals
+  `,
+    [["shijiazhaung", 500.5, 600, "1"]]
+  ).then(console.log)
+
+  await db
+    .query(
+      `--sql
+      SELECT * from cities;
+    `
+    )
+    .then(console.log)
+
+  await db
+    .query(
+      `--sql
+      SELECT * from only cities WHERE name = 'shijiazhaung';
+    `
+    )
+    .then(console.log)
+}
+
+// partition()
+async function partition() {
+  await db
+    .query(
+      `--sql
+      DROP TABLE IF EXISTS measurement;
+      CREATE TABLE measurement (
+        city_id         int not null,
+        logdate         date not null,
+        peaktemp        int,
+        unitsales       int
+      ) PARTITION BY RANGE (logdate);
+      SELECT * FROM measurement;
+    `
+    )
+    .then(console.log)
 
 }
