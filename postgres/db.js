@@ -52,6 +52,30 @@ export async function inserMany(sql, data) {
   return ret
 }
 
+/**
+ * `qy` 是一个tag function.
+ * 
+ * 可以用来对sql语句进行插值，而无须担心sql注入
+ * 
+ * 是`Pool.query`的wrapper
+ * 
+ * @example
+ * qy`
+ *  INSERT INTO table(c1, c2, c3)
+ *  VALUES (${var1}, ${var2}, ${var3})
+ *  RETURNING *;
+ * `
+ * 
+ * qy`
+ *  UPDATE table SET col1 = ${var1}, col2 = ${var2}
+ *  WHERE col1 > ${var3}
+ *  RETURNING *;
+ * `
+ */
+export async function qy() {
+  throw new Error("TODO")
+}
+
 export default {
   query
 }
